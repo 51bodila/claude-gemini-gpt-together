@@ -9,6 +9,7 @@ Helpers ({{BIN}}, run these files; role models in {{TEAM}}/config.json, log in {
 - `ask-gemini{{EXT}} <folder> "task"`: Gemini, read-only adviser. Option: -Model "Gemini 4 Hydrogen (XHigh)". Neon and Carbon need Google AI Pro.
 - `ask-gpt{{EXT}} -Image [--out name.png] <folder> "prompt"`: GPT draws ONE picture (built-in image tool), saves it in that folder and prints the file path. For any picture/photo/image request.
 - `ask-gemini{{EXT}} -Image [--out name.png] <folder> "prompt"`: Gemini draws ONE picture, saves it in that folder and prints the file path (the only mode where Gemini writes a file).
+- `ask-gemini{{EXT}} -Build <folder> "task"`: Gemini (e.g. Gemini 4 Neon) as the BUILDER: it edits files in that folder only and cannot run commands, so you run the tests. Used when the builder role is Gemini (`set-team builder "Gemini 4 Neon (High)"`).
 - `set-team{{EXT}} <role> <model> [-Effort x]`, `set-mode{{EXT}} eco|pro|max|solo`, `list-models{{EXT}}`.
 - For tasks with code, quotes or several lines, write the task to a temp file and pass `--task-file <file>` (quotes on the command line can be lost on Windows).
 Helpers can take minutes: run them with a long timeout (GPT up to 30 min, Gemini 15). They retry once themselves.

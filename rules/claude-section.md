@@ -10,6 +10,7 @@ Helpers ({{BIN}}, on PATH; role models in {{TEAM}}/config.json, log in {{TEAM}}/
 - `ask-gemini -Image [--out name.png] <folder> "prompt"`: Gemini draws ONE picture, saves it in that folder and prints the file path (the only mode where Gemini writes a file).
   Claude cannot make raster images (it can draw SVG itself): `ask-claude -Image` answers ERROR.
 - `ask-claude`: only for Codex and Antigravity leads; for you it answers ERROR (a lead never calls itself).
+- `ask-gemini{{EXT}} -Build <folder> "task"`: Gemini (e.g. Gemini 4 Neon) as the BUILDER: it edits files in that folder only and cannot run commands, so you run the tests. Used when the builder role is Gemini (`set-team builder "Gemini 4 Neon (High)"`).
 - `set-team <role> <model> [-Effort x]`, `set-mode eco|pro|max|solo`, `list-models`.
 - For tasks with code, quotes or several lines, write the task to a temp file and pass `--task-file <file>` (quotes on the command line can be lost on Windows).
 
