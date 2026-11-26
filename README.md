@@ -1,4 +1,4 @@
-# ai-team
+# claude-gemini-gpt-together
 
 Claude, GPT and Gemini working as one team, on the subscriptions you already pay for
 (Claude Pro/Max, ChatGPT Plus/Pro, a Google account). No API keys.
@@ -39,12 +39,12 @@ Any role can be given to any model.
 
 ## Install
 
-Windows only for now. Needs PowerShell 5.1+ and at least one of the three CLIs.
+Windows, macOS and Linux. Needs Node.js 18+ (no npm packages) and at least one of the three CLIs.
 
 ```
-git clone https://github.com/<you>/ai-team
-cd ai-team
-powershell -ExecutionPolicy Bypass -File install.ps1
+git clone https://github.com/51bodila/claude-gemini-gpt-together
+cd claude-gemini-gpt-together
+node install.js
 ```
 
 The installer backs up every file it changes to `~/.ai-team/backup/<timestamp>`,
@@ -55,14 +55,16 @@ Options:
 
 | Flag | What it does |
 |---|---|
-| `-Mode eco\|pro\|max\|solo` | Starting mode (default `pro`). |
-| `-AcceptAgyRisk` | Turns the Gemini helper on (see Known limits: Terms risk). |
-| `-AgyAutoAllowHelpers` | Lets Antigravity run only the `ask-*` / `set-*` helpers without asking. Any other command, or a helper call chained with `&`, `;`, `\|`, `$(...)`, still asks you. Needed only for headless `agy -p`. |
+| `--mode eco\|pro\|max\|solo` | Starting mode (default `pro`). |
+| `--accept-agy-risk` | Turns the Gemini helper on (see Known limits: Terms risk). |
+| `--agy-auto-allow-helpers` | Lets Antigravity run only the `ask-*` / `set-*` helpers without asking. Any other command, or a helper call chained with `&`, `;`, `\|`, `$(...)`, still asks you. Needed only for headless `agy -p`. |
 
 For Codex, the installer adds `~/.ai-team` (and nothing else) to the sandbox's `writable_roots`, so helpers can write their log. No network or full access.
 
-Uninstall: `uninstall.ps1` (removes only what the installer added; keeps your config, log and backups).
-Smoke test: `tests\smoke.ps1` asks each installed model "Reply with exactly: OK", then runs the unit tests.
+Uninstall: `node uninstall.js` (removes only what the installer added; keeps your config, log and backups).
+Tests: `node --test tests/` (no model calls). Live check: `node tests/smoke.js` asks each installed model "Reply with exactly: OK".
+
+Tasks with code, quotes or several lines: pass them with `--task-file <file>` (or `-` to read stdin). Helpers spawn the CLIs without a shell, so the text arrives byte-exact; only your own shell can mangle quotes on the command line.
 
 ## Sign in
 
@@ -146,7 +148,8 @@ Pro or Ultra.
 
 ## Known limits
 
-- Windows only for now.
+- Tested live on Windows 11. macOS and Linux use the same code and paths from the CLIs' docs; please open an issue if a CLI is not found (override with env `AI_TEAM_CODEX`, `AI_TEAM_CLAUDE`, `AI_TEAM_AGY`).
+- `agy -p` takes the prompt only as an argument, not from stdin.
 - `agy` in headless print mode cannot run commands (no one to approve). Interactive
   Antigravity asks you once per command; for headless use install with `-AgyAutoAllowHelpers`.
 - Codex's sandbox cannot see agy's Google sign-in. The rules tell Codex to re-run

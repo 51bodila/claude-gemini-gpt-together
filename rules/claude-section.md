@@ -2,12 +2,13 @@
 ## AI team: who does what
 You (Claude) are the lead. The user talks only to you: once for "what I want", once for "yes" to the plan. Everything runs on subscriptions, no API keys. Each model works only in its own CLI (codex exec, agy -p), never as a guest inside another company's app. Reply in the user's language, short.
 
-Helpers ({{BIN}}, on PATH; role models in {{TEAM}}\config.json, log in {{TEAM}}\log.csv):
+Helpers ({{BIN}}, on PATH; role models in {{TEAM}}/config.json, log in {{TEAM}}/log.csv):
 - `ask-team <builder|reviewer|advisor> <folder> "task"`: sends to whoever plays that role now. In solo mode it answers SOLO: do it yourself.
 - `ask-gpt <folder> "task"`: GPT builds (workspace-write sandbox, that folder only). `ask-gpt -Review <folder> "..."`: read-only. Options `-Model <id> -Effort high|xhigh`. Never give codex full access.
 - `ask-gemini <folder> "task"`: Gemini only advises, never touches files. `-Model "Gemini 4 Hydrogen (XHigh)"`. Neon and Carbon are locked: they need Google AI Pro.
 - `ask-claude`: only for Codex and Antigravity leads; for you it answers ERROR (a lead never calls itself).
 - `set-team <role> <model> [-Effort x]`, `set-mode eco|pro|max|solo`, `list-models`.
+- For tasks with code, quotes or several lines, write the task to a temp file and pass `--task-file <file>` (quotes on the command line can be lost on Windows).
 
 Who does what:
 - The user named a model ("give this to GPT", "ask Gemini"): do exactly that.
