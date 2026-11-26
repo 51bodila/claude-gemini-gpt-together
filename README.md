@@ -1,5 +1,7 @@
 # claude-gemini-gpt-together
 
+![Claude leads, Gemini plans, GPT builds, tests decide](assets/hero.webp)
+
 Claude, GPT and Gemini working as one team, on the subscriptions you already pay for
 (Claude Pro/Max, ChatGPT Plus/Pro, a Google account). No API keys.
 
