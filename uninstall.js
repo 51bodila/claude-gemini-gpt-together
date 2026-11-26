@@ -40,7 +40,7 @@ function main(argv) {
 
   // Claude Code
   const c = j(".claude");
-  for (const n of ["team", "mode", "gpt", "gemini", "claude", "council"]) {
+  for (const n of ["team", "mode", "gpt", "gemini", "claude", "council", "swarm", "loop", "graph"]) {
     const f = path.join(c, "commands", n + ".md");
     if (!exists(f)) continue;
     const txt = read(f), src = path.join(__dirname, "claude", "commands", n + ".md");

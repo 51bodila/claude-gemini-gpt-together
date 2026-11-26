@@ -39,6 +39,18 @@ Strengths: Claude has the best taste, does design and frontend, and has the fina
 say. GPT is the most rigorous. Gemini is fast with ideas and words.
 Any role can be given to any model.
 
+## Swarms, loops, graphs
+
+Installed as commands in Claude Code and as skills in Codex and Antigravity:
+
+| Command | What happens |
+|---|---|
+| `/swarm <goal>` | The lead splits the goal into 2-5 independent parts (own files, interface, tests); the builder builds them in parallel; the lead joins, runs every test, a model that did not write the code reviews it. |
+| `/loop <goal>` | Build → run tests → review → send the exact failures back to the builder, until every test passes (max 3 rounds). |
+| `/graph <goal>` | The lead draws the plan as a Mermaid graph (agents, handoffs, parallel branches, the fix loop), waits for your yes, then runs it with /swarm and /loop. |
+
+Example team: Claude Opus as the brain, Gemini 4 Neon as the builder: `set-team builder "Gemini 4 Neon (High)"` (Neon needs Google AI Pro or Ultra; `list-models` shows what your plan has). A Gemini builder edits files in the project folder only (`ask-gemini -Build`); the lead runs the tests.
+
 ## Install
 
 Windows, macOS and Linux. Needs Node.js 18+ (no npm packages) and at least one of the three CLIs.
