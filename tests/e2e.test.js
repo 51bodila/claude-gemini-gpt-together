@@ -101,14 +101,6 @@ test("ask-gemini ERROR json with model list -> one ERROR line with Models on you
   assert.match(r.out, /^ERROR: .*Models on your plan: Gemini A \(High\), Gemini B \(Low\)/);
 });
 
-test("ask-gemini without allow-agy -> exit 5", () => {
-  H.resetTeam();
-  const agy = H.makeFake("agy-x", FAKE_AGY);
-  const r = runHelper("ask-gemini.js", [H.tmp("p"), "hello"], { AI_TEAM_AGY: agy });
-  assert.equal(r.code, 5);
-  assert.match(r.out, /^ERROR: /);
-});
-
 test("ask-claude end-to-end with fake claude", () => {
   H.resetTeam();
   const claude = H.makeFake("claude", `

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // AI team installer (Windows / macOS / Linux, Node 18+, no dependencies). Safe to run again: it updates its own blocks and files only.
 // Every file it changes is backed up to ~/.ai-team/backup/<timestamp> first. It never deletes your files.
-//   node install.js [--mode eco|pro|max|solo] [--accept-agy-risk] [--agy-auto-allow-helpers] [--home <dir>] [--no-path] [--no-detect]
+//   node install.js [--mode eco|pro|max|solo] [--home <dir>] [--no-path] [--no-detect]
 "use strict";
 const fs = require("fs");
 const os = require("os");
@@ -120,7 +120,6 @@ function install(argv) {
   if (!exists(path.join(team, "config.json"))) {
     spawnSync(process.execPath, [path.join(lib, "set-mode.js"), opt.mode], { env: { ...process.env, AI_TEAM_HOME: home }, stdio: "ignore", windowsHide: true });
   }
-  if (opt.acceptAgyRisk) ctx.writeText(path.join(team, "allow-agy"), "");
   done.push(`helpers -> ${bin}`);
 
   if (!opt.noPath && ctx.realHome) {
@@ -198,7 +197,7 @@ function install(argv) {
     ctx.writeText(path.join(plug, "plugin.json"), '{ "name": "ai-team" }\n');
     ctx.writeText(path.join(plug, "rules", "AGENTS.md"), ctx.fill(rules, "Gemini (running in Antigravity)", "you are Gemini, so never call ask-gemini or ask-team for a role whose tool is gemini; do that part yourself."));
     ctx.copyTree(path.join(Src, "antigravity", "skills"), path.join(gemCfg, "skills"));
-    if (opt.agyAuto) {
+    { // always: lets Antigravity run ONLY our helper calls without a prompt (needed for headless agy -p)
       const hook = { "ai-team-allow-helpers": { PreToolUse: [{ matcher: "run_command", hooks: [{ type: "command", command: `node "${fwd(lib)}/agy-allow-helpers.js"`, timeout: 5 }] }] } };
       ctx.writeText(path.join(plug, "hooks.json"), JSON.stringify(hook, null, 2) + "\n");
       done.push("Antigravity: helpers (only them) run without asking");
@@ -211,7 +210,6 @@ function install(argv) {
 
   console.log(`AI team installed. Mode: ${opt.mode}`);
   for (const d of done) console.log(` - ${d}`);
-  if (!exists(path.join(team, "allow-agy"))) console.log(" - Gemini helper is OFF. Read the README (Terms risk), then re-run with --accept-agy-risk to turn it on.");
   if (exists(ctx.backup)) console.log(` - backups: ${ctx.backup}`);
   // Tell the user exactly how to install any CLI that is missing (official installers only).
   const win = process.platform === "win32";

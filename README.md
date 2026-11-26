@@ -56,8 +56,6 @@ Options:
 | Flag | What it does |
 |---|---|
 | `--mode eco\|pro\|max\|solo` | Starting mode (default `pro`). |
-| `--accept-agy-risk` | Turns the Gemini helper on (see Known limits: Terms risk). |
-| `--agy-auto-allow-helpers` | Lets Antigravity run only the `ask-*` / `set-*` helpers without asking. Any other command, or a helper call chained with `&`, `;`, `\|`, `$(...)`, still asks you. Needed only for headless `agy -p`. |
 
 For Codex, the installer adds `~/.ai-team` (and nothing else) to the sandbox's `writable_roots`, so helpers can write their log. No network or full access.
 
@@ -154,14 +152,10 @@ Pro or Ultra.
 
 - Tested live on Windows 11. macOS and Linux use the same code and paths from the CLIs' docs; please open an issue if a CLI is not found (override with env `AI_TEAM_CODEX`, `AI_TEAM_CLAUDE`, `AI_TEAM_AGY`).
 - `agy -p` takes the prompt only as an argument, not from stdin.
-- `agy` in headless print mode cannot run commands (no one to approve). Interactive
-  Antigravity asks you once per command; for headless use install with `-AgyAutoAllowHelpers`.
+- Antigravity gets a small hook that lets it run only the team helpers (`ask-*`, `set-*`, `list-models`) without asking; any other command, or a helper call chained with `&`, `;`, `|`, `$(...)`, still asks you.
 - Codex's sandbox cannot see agy's Google sign-in. The rules tell Codex to re-run
   that one helper outside the sandbox, which you approve in Codex.
 - Claude's claude.ai sign-in for scripts expires. Re-run `claude auth login`.
-- Google staff have said that wrapping `agy -p` inside other agents on consumer
-  plans may break Antigravity's Terms. The Gemini helper is therefore OFF until you
-  create the file `~/.ai-team/allow-agy` yourself. Your choice, your account.
 - Codex on ChatGPT Plus has small limits. Prefer eco or pro.
 
 ## License
