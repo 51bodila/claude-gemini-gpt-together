@@ -46,6 +46,30 @@ test("dirTask: --task-file read exactly", () => {
   assert.equal(r.task, text);
 });
 
+test("dirTask: --task-file + one folder -> that folder; unknown name -> missingDir (review fix)", () => {
+  const d = H.tmp("tfdir");
+  const f = path.join(H.tmp("tf2"), "t.txt");
+  fs.writeFileSync(f, "do it", "utf8");
+  const r = core.dirTask([d], { "task-file": f });
+  assert.equal(r.dir, path.resolve(d));
+  assert.equal(r.task, "do it");
+  assert.equal(core.dirTask(["no-such-project-folder"], { "task-file": f }).missingDir, true);
+});
+
+test("image.deliver never overwrites, workDir starts empty (review fix)", () => {
+  const img = require("../lib/image");
+  const w = img.workDir();
+  assert.deepEqual(fs.readdirSync(w), []);
+  const dest = H.tmp("deliver");
+  fs.writeFileSync(path.join(dest, "pic.png"), "old");
+  fs.writeFileSync(path.join(w, "pic.png"), "new");
+  const p = img.deliver(path.join(w, "pic.png"), dest, "pic.png");
+  assert.equal(path.basename(p), "pic-2.png");
+  assert.equal(fs.readFileSync(path.join(dest, "pic.png"), "utf8"), "old");
+  img.cleanup(w);
+  assert.equal(fs.existsSync(w), false);
+});
+
 test("isLimit", () => {
   for (const s of ["usage limit reached", "429 Too Many Requests", "RESOURCE_EXHAUSTED"]) assert.equal(core.isLimit(s), true, s);
   for (const s of ["id 1429x", "normal answer", "", null]) assert.equal(core.isLimit(s), false, String(s));

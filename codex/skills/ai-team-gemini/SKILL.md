@@ -11,3 +11,5 @@ Reply in the user's language, short.
 3. Run `{{BIN}}/ask-gemini{{EXT}} <folder> "task"` (read-only adviser) with a long timeout (up to 30 min); it retries once itself.
 4. Send only the part of the task meant for Gemini. Read the answer, check its claims, report in plain words.
 5. A line starting with ERROR: show it to the user with the fix, do not work around it.
+
+- Picture/photo/image request: run `{{BIN}}/ask-gemini{{EXT}} -Image [--out name.png] <folder> "<picture description>"`, then send the file path it prints to the user.

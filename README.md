@@ -64,6 +64,10 @@ For Codex, the installer adds `~/.ai-team` (and nothing else) to the sandbox's `
 Uninstall: `node uninstall.js` (removes only what the installer added; keeps your config, log and backups).
 Tests: `node --test tests/` (no model calls). Live check: `node tests/smoke.js` asks each installed model "Reply with exactly: OK".
 
+After installing, the installer asks each CLI which models your plan really has, picks eco / pro / max from them and test-calls each one (`node ~/.ai-team/lib/detect-models.js --write` re-runs it; `--no-detect` skips it).
+
+Pictures: `ask-gpt -Image [--out cat.png] <folder> "prompt"` or `ask-gemini -Image ...` generates one image in an empty temp folder (the model can't touch your project), checks it is a real PNG/JPEG/WebP, then copies it into `<folder>` without overwriting anything. Claude can't make raster images.
+
 Tasks with code, quotes or several lines: pass them with `--task-file <file>` (or `-` to read stdin). Helpers spawn the CLIs without a shell, so the text arrives byte-exact; only your own shell can mangle quotes on the command line.
 
 ## Sign in

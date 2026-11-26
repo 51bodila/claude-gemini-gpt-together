@@ -6,6 +6,9 @@ Helpers ({{BIN}}, on PATH; role models in {{TEAM}}/config.json, log in {{TEAM}}/
 - `ask-team <builder|reviewer|advisor> <folder> "task"`: sends to whoever plays that role now. In solo mode it answers SOLO: do it yourself.
 - `ask-gpt <folder> "task"`: GPT builds (workspace-write sandbox, that folder only). `ask-gpt -Review <folder> "..."`: read-only. Options `-Model <id> -Effort high|xhigh`. Never give codex full access.
 - `ask-gemini <folder> "task"`: Gemini only advises, never touches files. `-Model "Gemini 4 Hydrogen (XHigh)"`. Neon and Carbon are locked: they need Google AI Pro.
+- `ask-gpt -Image [--out name.png] <folder> "prompt"`: GPT draws ONE picture (built-in image tool), saves it in that folder and prints the file path. For any picture/photo/image request.
+- `ask-gemini -Image [--out name.png] <folder> "prompt"`: Gemini draws ONE picture, saves it in that folder and prints the file path (the only mode where Gemini writes a file).
+  Claude cannot make raster images (it can draw SVG itself): `ask-claude -Image` answers ERROR.
 - `ask-claude`: only for Codex and Antigravity leads; for you it answers ERROR (a lead never calls itself).
 - `set-team <role> <model> [-Effort x]`, `set-mode eco|pro|max|solo`, `list-models`.
 - For tasks with code, quotes or several lines, write the task to a temp file and pass `--task-file <file>` (quotes on the command line can be lost on Windows).

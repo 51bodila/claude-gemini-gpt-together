@@ -10,3 +10,5 @@ description: AI team: send the task to gemini right now. Use for /ai-team-gemini
 3. Read the answer, check its claims against the code or facts, and run tests yourself if files changed.
 4. If it prints ERROR or LIMIT, tell the user the one-line reason in the user's language and do not work around it.
 5. Reply in the user's language, short, starting with: who got the task and why.
+
+- Picture/photo/image request: run `{{BIN}}/ask-gemini{{EXT}} -Image [--out name.png] <folder> "<picture description>"`, then send the file path it prints to the user.

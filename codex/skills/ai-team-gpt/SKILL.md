@@ -11,3 +11,5 @@ Reply in the user's language, short.
 3. Run `{{BIN}}/ask-gpt{{EXT}} <folder> "task"` (builds in that folder only; add -Review for read-only) with a long timeout (up to 30 min); it retries once itself.
 4. Send only the part of the task meant for GPT. Read the answer, check its claims, report in plain words.
 5. A line starting with ERROR: show it to the user with the fix, do not work around it.
+
+- Picture/photo/image request: run `{{BIN}}/ask-gpt{{EXT}} -Image [--out name.png] <folder> "<picture description>"`, then send the file path it prints to the user.

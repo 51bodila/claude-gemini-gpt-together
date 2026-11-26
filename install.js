@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // AI team installer (Windows / macOS / Linux, Node 18+, no dependencies). Safe to run again: it updates its own blocks and files only.
 // Every file it changes is backed up to ~/.ai-team/backup/<timestamp> first. It never deletes your files.
-//   node install.js [--mode eco|pro|max|solo] [--accept-agy-risk] [--agy-auto-allow-helpers] [--home <dir>] [--no-path]
+//   node install.js [--mode eco|pro|max|solo] [--accept-agy-risk] [--agy-auto-allow-helpers] [--home <dir>] [--no-path] [--no-detect]
 "use strict";
 const fs = require("fs");
 const os = require("os");
@@ -61,7 +61,7 @@ function makeCtx(home, backupSuffix = "") {
     for (const d of dirs) { const f = path.join(backupRoot, d, relName(p)); if (exists(f) && fs.statSync(f).isFile()) return f; }
     return null;
   };
-  ctx.pathEntries = () => ({ zsh: path.join(home, ".zshrc"), bash: path.join(home, ".bashrc") });
+  ctx.pathEntries = () => ({ zsh: path.join(home, ".zshrc"), bash: path.join(home, ".bashrc"), profile: path.join(home, ".profile") });
   ctx.psPath = (script) => spawnSync("powershell", ["-NoProfile", "-Command", script], { env: { ...process.env, AI_TEAM_BIN: bin }, encoding: "utf8", windowsHide: true });
   return ctx;
 }
@@ -76,7 +76,7 @@ function setBlock(ctx, file, block, re = BLOCK_RE) {
 }
 
 function parseArgs(argv) {
-  const o = { mode: "pro", acceptAgyRisk: false, agyAuto: false, home: null, noPath: false };
+  const o = { mode: "pro", acceptAgyRisk: false, agyAuto: false, home: null, noPath: false, noDetect: false };
   for (let i = 0; i < argv.length; i++) {
     const m = /^--?([A-Za-z][\w-]*)(?:=(.*))?$/.exec(argv[i]);
     if (!m) continue;
@@ -86,6 +86,7 @@ function parseArgs(argv) {
     else if (k === "acceptagyrisk") o.acceptAgyRisk = true;
     else if (k === "agyautoallowhelpers") o.agyAuto = true;
     else if (k === "nopath") o.noPath = true;
+    else if (k === "nodetect") o.noDetect = true;
   }
   return o;
 }
@@ -128,10 +129,11 @@ function install(argv) {
       if (/ADDED/.test(r.stdout || "")) done.push(`PATH: added ${bin} (open a new terminal)`);
     } else {
       const block = `# AI-TEAM PATH START\nexport PATH="$HOME/.ai-team/bin:$PATH"\n# AI-TEAM PATH END`;
-      const { zsh, bash } = ctx.pathEntries();
+      const { zsh, bash, profile } = ctx.pathEntries();
       const targets = [];
       if (IS_MAC || exists(zsh)) targets.push(zsh);
       if (exists(bash)) targets.push(bash);
+      if (!targets.length || exists(profile)) targets.push(profile); // no .zshrc/.bashrc: use (and create) ~/.profile
       for (const f of targets) {
         const before = exists(f) ? read(f) : null;
         setBlock(ctx, f, block, PATH_RE);
@@ -204,6 +206,9 @@ function install(argv) {
     done.push("Antigravity: rules plugin ~/.gemini/config/plugins/ai-team, skills ai-team-*");
   }
 
+  // After the tools are in place: replace the author-only model names in modes.json with models this person really has (see detectAfter below).
+  detectPlan = !opt.noDetect && !opt.home && ctx.realHome && !!(core.findCodex() || core.findAgy() || core.findClaude());
+
   console.log(`AI team installed. Mode: ${opt.mode}`);
   for (const d of done) console.log(` - ${d}`);
   if (!exists(path.join(team, "allow-agy"))) console.log(" - Gemini helper is OFF. Read the README (Terms risk), then re-run with --accept-agy-risk to turn it on.");
@@ -212,8 +217,20 @@ function install(argv) {
   return 0;
 }
 
+let detectPlan = false;
+async function detectAfter() {
+  if (!detectPlan) return;
+  console.log("Checking which models your plans really have (about 5 short calls)...");
+  try {
+    const r = await require("./lib/detect-models.js").detectModes({ probe: true, write: true });
+    console.log(r.text);
+  } catch (e) { console.log("Model check skipped: " + ((e && e.message) || e) + " (config/modes.json defaults stay; run: node ~/.ai-team/lib/detect-models.js --write)"); }
+}
+
 module.exports = { makeCtx, setBlock, parseArgs, resolveHome, BLOCK_RE, PATH_RE, fwd, read, exists, isDir, IS_WIN, IS_MAC };
 if (require.main === module) {
-  try { process.exitCode = install(process.argv.slice(2)); }
-  catch (e) { console.error("ERROR: " + (e && e.message || e)); process.exitCode = 1; }
+  (async () => {
+    try { process.exitCode = install(process.argv.slice(2)); if (!process.exitCode) await detectAfter(); }
+    catch (e) { console.error("ERROR: " + (e && e.message || e)); process.exitCode = 1; }
+  })();
 }
