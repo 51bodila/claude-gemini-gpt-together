@@ -213,6 +213,18 @@ function install(argv) {
   for (const d of done) console.log(` - ${d}`);
   if (!exists(path.join(team, "allow-agy"))) console.log(" - Gemini helper is OFF. Read the README (Terms risk), then re-run with --accept-agy-risk to turn it on.");
   if (exists(ctx.backup)) console.log(` - backups: ${ctx.backup}`);
+  // Tell the user exactly how to install any CLI that is missing (official installers only).
+  const win = process.platform === "win32";
+  const missing = [
+    [core.findClaude(), "Claude Code", win ? "irm https://claude.ai/install.ps1 | iex" : "curl -fsSL https://claude.ai/install.sh | bash"],
+    [core.findCodex(), "Codex CLI", win ? "npm install -g @openai/codex" : "npm install -g @openai/codex   (EACCES error? sudo npm install -g @openai/codex)"],
+    [core.findAgy(), "Antigravity CLI", win ? "irm https://antigravity.google/cli/install.ps1 | iex" : "curl -fsSL https://antigravity.google/cli/install.sh | bash"],
+  ].filter(([found]) => !found);
+  if (missing.length) {
+    console.log("Not installed yet (the team works without them; install one to add that model):");
+    for (const [, name, cmd] of missing) console.log(`   ${name}:  ${cmd}`);
+    console.log("   Then open a new terminal, sign in, and re-run: node ~/.ai-team/lib/detect-models.js --write");
+  }
   console.log("Sign in once in your own terminal if you haven't: claude | codex (Sign in with ChatGPT) | agy (Google). Then run: node tests/smoke.js");
   return 0;
 }
