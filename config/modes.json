@@ -1,0 +1,20 @@
+{
+  "eco": {
+    "builder":  { "tool": "gpt",    "model": "gpt-6-luna",                "effort": "medium" },
+    "reviewer": { "tool": "gpt",    "model": "gpt-6-luna",                "effort": "medium" },
+    "advisor":  { "tool": "gemini", "model": "Gemini 3.8 Flash (Low)",    "effort": "" },
+    "designer": { "tool": "claude", "model": "haiku",                     "effort": "" }
+  },
+  "pro": {
+    "builder":  { "tool": "gpt",    "model": "gpt-6.2-astra",             "effort": "high" },
+    "reviewer": { "tool": "gpt",    "model": "gpt-6.2-astra",             "effort": "medium" },
+    "advisor":  { "tool": "gemini", "model": "Gemini 4 Hydrogen (High)",  "effort": "" },
+    "designer": { "tool": "claude", "model": "opus",                      "effort": "" }
+  },
+  "max": {
+    "builder":  { "tool": "gpt",    "model": "gpt-6.2-astra",             "effort": "xhigh" },
+    "reviewer": { "tool": "gpt",    "model": "gpt-6.2-astra",             "effort": "xhigh" },
+    "advisor":  { "tool": "gemini", "model": "Gemini 4 Hydrogen (XHigh)", "effort": "" },
+    "designer": { "tool": "claude", "model": "opus",                      "effort": "" }
+  }
+}
