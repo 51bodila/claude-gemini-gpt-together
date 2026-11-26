@@ -152,7 +152,7 @@ Pro or Ultra.
 
 ## Known limits
 
-- Tested live on Windows 11. macOS and Linux use the same code and paths from the CLIs' docs; please open an issue if a CLI is not found (override with env `AI_TEAM_CODEX`, `AI_TEAM_CLAUDE`, `AI_TEAM_AGY`).
+- CI runs the tests on Windows and Linux (Node 18 and 22); macOS was tested on a real MacBook (all tests pass, live Claude call). Live calls of all three models were tested on Windows 11. macOS and Linux use the same code and paths from the CLIs' docs; please open an issue if a CLI is not found (override with env `AI_TEAM_CODEX`, `AI_TEAM_CLAUDE`, `AI_TEAM_AGY`).
 - `agy -p` takes the prompt only as an argument, not from stdin.
 - Antigravity gets a small hook that lets it run only the team helpers (`ask-*`, `set-*`, `list-models`) without asking; any other command, or a helper call chained with `&`, `;`, `|`, `$(...)`, still asks you.
 - Codex's sandbox cannot see agy's Google sign-in. The rules tell Codex to re-run

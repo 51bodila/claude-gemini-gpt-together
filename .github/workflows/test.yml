@@ -9,12 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]  # macOS: free runners rarely start for this repo; tested on a real Mac by hand
         node: [18, 22]
-        exclude:
-          # GitHub's free macOS runners are scarce: one macOS job is enough (real Mac tested by hand)
-          - os: macos-latest
-            node: 18
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
